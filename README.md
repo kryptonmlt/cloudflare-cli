@@ -4,7 +4,6 @@ An application that connects to the cloudflare api given an email / token / acco
 
 ## How to Run
 - docker run -it -e EMAIL="YOUR_CLOUFLARE_EMAIL" -e KEY="YOUR_API_KEY" -e ID="YOUR_ACCOUNT_ID" kryptonmlt/cloudflare-cli
-- Docker registry: https://hub.docker.com/repository/docker/kryptonmlt/cloudflare-cli
 ## Local Development
 - Build
     - jdk 13+ installed
@@ -14,3 +13,4 @@ An application that connects to the cloudflare api given an email / token / acco
 # Release
 - docker build . -t kryptonmlt/cloudflare-cli
 - docker push kryptonmlt/cloudflare-cli
+- Docker registry: https://hub.docker.com/repository/docker/kryptonmlt/cloudflare-cli
