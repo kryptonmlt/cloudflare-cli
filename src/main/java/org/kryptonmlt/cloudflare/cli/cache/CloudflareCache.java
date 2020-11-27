@@ -17,6 +17,8 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class CloudflareCache {
     @Value("${cloudflare.accountId}")
     private String accountId;
 
+    @Value("${cloudflare.parallel}")
+    private int parallel;
+
     @PostConstruct
     public void init() {
         if (cloudflareAccess.getXAuthEmail().isEmpty()) {
@@ -59,17 +64,17 @@ public class CloudflareCache {
         System.out.println("Started loading ZONE cache..");
         zones = this.getAllDomains();
         System.out.println("Finished warming up ZONE cache..");
-        System.out.println("Started loading DNS cache..");
+        System.out.println("Started loading DNS cache.. This may take a some minutes if you have 100+ domains");
         dnsRecordsById = new HashMap<>();
         dnsRecordsByDomain = new HashMap<>();
-        int counter = 0;
-        float per = 0;
-        for (Zone zone : zones) {
-            per = counter / (zones.size() * 1f) * 100;
-            System.out.print("\r" + df.format(per) + " %   ");
-            dnsRecordsById.put(zone.getId(), this.getAllDnsRecords(zone.getId()));
-            dnsRecordsById.put(zone.getName(), this.getAllDnsRecords(zone.getId()));
-            counter++;
+        ForkJoinPool forkJoinPool = new ForkJoinPool(parallel);
+        try {
+            forkJoinPool.submit(() ->
+                    zones.stream().parallel().forEach(zone -> clearCacheByZone(zone))
+            ).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to reload cache - best to close application";
         }
         return "Finished warming up DNS cache";
     }
@@ -82,8 +87,10 @@ public class CloudflareCache {
         return dnsRecordsById;
     }
 
-    public void clearCacheByZone(String zoneId) {
-        dnsRecordsById.put(zoneId, this.getAllDnsRecords(zoneId));
+    public void clearCacheByZone(Zone zone) {
+        List<DNSRecord> records = this.getAllDnsRecords(zone.getId());
+        dnsRecordsById.put(zone.getId(), records);
+        dnsRecordsById.put(zone.getName(), records);
     }
 
     public Map<String, List<DNSRecord>> getDnsRecordsByDomain() {

@@ -1,6 +1,5 @@
 package org.kryptonmlt.cloudflare.cli.services;
 
-import org.kryptonmlt.cloudflare.cli.cache.CloudflareCache;
 import eu.roboflax.cloudflare.CloudflareAccess;
 import eu.roboflax.cloudflare.CloudflareCallback;
 import eu.roboflax.cloudflare.CloudflareRequest;
@@ -8,13 +7,13 @@ import eu.roboflax.cloudflare.CloudflareResponse;
 import eu.roboflax.cloudflare.constants.Category;
 import eu.roboflax.cloudflare.objects.dns.DNSRecord;
 import eu.roboflax.cloudflare.objects.zone.Zone;
+import org.kryptonmlt.cloudflare.cli.cache.CloudflareCache;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 public class SubDomainService {
@@ -56,7 +55,7 @@ public class SubDomainService {
                                 System.out.println("Error updating zone: " + errors);
                             }
                         }, DNSRecord.class);
-                cloudflareCache.clearCacheByZone(zone.getId());
+                cloudflareCache.clearCacheByZone(zone);
             }
         }
         return "Mass target switch finished";
@@ -119,7 +118,7 @@ public class SubDomainService {
                                     System.out.println("Error creating zone: " + errors);
                                 }
                             }, DNSRecord.class);
-                    cloudflareCache.clearCacheByZone(zone.getId());
+                    cloudflareCache.clearCacheByZone(zone);
                     return "Update finished";
                 } else {
                     return "Prefix: " + prefix + " was already found for: " + zone.getName();
@@ -170,7 +169,7 @@ public class SubDomainService {
                                 System.out.println("Error creating zone: " + errors);
                             }
                         }, DNSRecord.class);
-                cloudflareCache.clearCacheByZone(zone.getId());
+                cloudflareCache.clearCacheByZone(zone);
             }
         }
         return "Finished dns mass update";
