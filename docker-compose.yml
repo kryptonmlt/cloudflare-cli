@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  cloudflare-cli:
+    image: library/openjdk:13-slim
+    command: ["bash"]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./target/cli-0.0.1-SNAPSHOT.jar:/root/cloudflare-cli
