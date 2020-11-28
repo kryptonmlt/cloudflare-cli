@@ -18,14 +18,14 @@ public class ExportCommands {
     @Value("${cloudflare.apikey}")
     private String apiKey;
 
-    @ShellMethod("Reload the cloudflare-cli zone/records cache")
+    @ShellMethod("Exports a wrangler toml file for each zone you have in your cloudflare account")
     public String wrangler(
             @ShellOption(defaultValue = "", help = "route subdomain") String preDomain,
             @ShellOption(defaultValue = "", help = "route after domain") String postDomain) {
         return cloudflareCache.exportWrangler(preDomain, postDomain);
     }
 
-    @ShellMethod("Reload the cloudflare-cli zone/records cache")
+    @ShellMethod("Creates a script to add routes to your cloudflare workers")
     public String WorkerRoutes(
             @ShellOption(help = "Name of Cloudflare worker to use") String workerScript,
             @ShellOption(defaultValue = "", help = "route subdomain") String preDomain,
