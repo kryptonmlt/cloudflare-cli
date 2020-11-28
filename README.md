@@ -12,7 +12,7 @@ Currently this cloudflare-cli uses the API Token method but API Keys will be imp
 ![Image on how to get your api token](docs/api_token.PNG)
 
 ## Configuration
-- As explained in the *How to Run* section there is no configuration file that needs to be filled.Instead everything 
+- As explained in the *How to Run* section there is no configuration file that needs to be filled. Instead, everything 
 can be passed as environment variables in the docker run command.
 
 ## Usage
