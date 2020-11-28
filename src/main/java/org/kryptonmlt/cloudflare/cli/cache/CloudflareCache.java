@@ -69,9 +69,11 @@ public class CloudflareCache {
         dnsRecordsByDomain = new HashMap<>();
         ForkJoinPool forkJoinPool = new ForkJoinPool(parallel);
         try {
-            forkJoinPool.submit(() ->
-                    zones.stream().parallel().forEach(zone -> clearCacheByZone(zone))
-            ).get();
+            if (zones != null) {
+                forkJoinPool.submit(() ->
+                        zones.stream().parallel().forEach(zone -> clearCacheByZone(zone))
+                ).get();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed to reload cache - best to close application";
