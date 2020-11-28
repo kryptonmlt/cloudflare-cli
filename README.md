@@ -9,7 +9,7 @@ An application that allows you to interact with the cloudflare api given an emai
 Cloudflare CLI uses the Cloudflare API internally, there are 2 ways of gaining access to the API; 
 [API Keys](https://developers.cloudflare.com/api/tokens) and [API Tokens](https://developers.cloudflare.com/api/keys).
 Currently this cloudflare-cli uses the API Token method but API Keys will be implemented later on.
-![Image on how to get your api token](docs/api_token.png)
+![Image on how to get your api token](docs/api_token.PNG)
 
 ## Configuration
 - As explained in the *How to Run* section there is no configuration file that needs to be filled.Instead everything 
@@ -17,9 +17,9 @@ can be passed as environment variables in the docker run command.
 
 ## Usage
 As with most CLIs, *help* is your friend here
-![Help Command in cloudflare-cli](docs/help.png)
+![Help Command in cloudflare-cli](docs/help.PNG)
 You can also run help on a particular command to get more details; example *help single-update*
-![Help Command in cloudflare-cli](docs/help-1.png)
+![Help Command in cloudflare-cli](docs/help-1.PNG)
 
 ## Examples
 - Create an unproxied dns record
