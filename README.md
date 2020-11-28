@@ -16,9 +16,9 @@ Currently this cloudflare-cli uses the API Token method but API Keys will be imp
 can be passed as environment variables in the docker run command.
 
 ## Usage
-As with most CLIs, *help* is your friend here
+- As with most CLIs, **help** is your friend here
 ![Help Command in cloudflare-cli](docs/help.PNG)
-You can also run help on a particular command to get more details; example *help single-update*
+- You can also run help on a particular command to get more details; example **help single-update**
 ![Help Command in cloudflare-cli](docs/help-1.PNG)
 
 ## Examples
