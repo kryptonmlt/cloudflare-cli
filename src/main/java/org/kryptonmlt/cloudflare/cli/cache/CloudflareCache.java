@@ -64,16 +64,16 @@ public class CloudflareCache {
     public String reloadCache() {
         System.out.println("Started loading ZONE cache..");
         zones = this.getAllDomains();
-        System.out.println("Finished warming up ZONE cache..");
+        System.out.println("Finished warming up ZONE (" + zones.size() + ") cache..");
         System.out.println("Started loading DNS cache.. This may take a some minutes if you have 100+ domains");
         dnsRecordsById = new HashMap<>();
         dnsRecordsByDomain = new HashMap<>();
-        //ForkJoinPool forkJoinPool = new ForkJoinPool(parallel);
+        ForkJoinPool forkJoinPool = new ForkJoinPool(parallel);
         try {
             if (zones != null) {
-                //forkJoinPool.submit(() ->
-                        zones.stream().parallel().forEach(zone -> clearCacheByZone(zone, zones.size(), true));
-                //).get();
+                forkJoinPool.submit(() ->
+                        zones.stream().parallel().forEach(zone -> clearCacheByZone(zone, zones.size(), true))
+                ).get();
             }
             System.out.print("\r100%");
             System.out.println("");
