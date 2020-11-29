@@ -75,7 +75,7 @@ public class CloudflareCache {
                         zones.stream().parallel().forEach(zone -> clearCacheByZone(zone, zones.size(), true))
                 ).get();
             }
-            System.out.print("\r100%");
+            System.out.print("\r100%   ");
             System.out.println("");
             counter = 0;
         } catch (Exception e) {
