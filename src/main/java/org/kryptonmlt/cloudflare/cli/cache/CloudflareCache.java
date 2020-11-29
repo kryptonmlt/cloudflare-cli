@@ -48,6 +48,7 @@ public class CloudflareCache {
 
     @Value("${cloudflare.parallel}")
     private int parallel;
+    private static int counter = 0;
 
     @PostConstruct
     public void init() {
@@ -67,13 +68,16 @@ public class CloudflareCache {
         System.out.println("Started loading DNS cache.. This may take a some minutes if you have 100+ domains");
         dnsRecordsById = new HashMap<>();
         dnsRecordsByDomain = new HashMap<>();
-        ForkJoinPool forkJoinPool = new ForkJoinPool(parallel);
+        //ForkJoinPool forkJoinPool = new ForkJoinPool(parallel);
         try {
             if (zones != null) {
-                forkJoinPool.submit(() ->
-                        zones.stream().parallel().forEach(zone -> clearCacheByZone(zone))
-                ).get();
+                //forkJoinPool.submit(() ->
+                        zones.stream().parallel().forEach(zone -> clearCacheByZone(zone, zones.size(), true));
+                //).get();
             }
+            System.out.print("\r100%");
+            System.out.println("");
+            counter = 0;
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed to reload cache - best to close application";
@@ -90,6 +94,15 @@ public class CloudflareCache {
     }
 
     public void clearCacheByZone(Zone zone) {
+        clearCacheByZone(zone, 0, false);
+    }
+
+    public void clearCacheByZone(Zone zone, int size, boolean display) {
+        if (display) {
+            float per = counter / (zones.size() * 1f) * 100;
+            System.out.print("\r" + df.format(per) + " %   ");
+            counter++;
+        }
         List<DNSRecord> records = this.getAllDnsRecords(zone.getId());
         dnsRecordsById.put(zone.getId(), records);
         dnsRecordsById.put(zone.getName(), records);
