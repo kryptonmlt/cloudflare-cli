@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,9 @@ public class CloudflareCache {
     public void init() {
         if (cloudflareAccess.getXAuthEmail().isEmpty()) {
             System.out.println("No Auth Email given in properties file");
+            zones = new ArrayList<>();
+            dnsRecordsById = new HashMap<>();
+            dnsRecordsByDomain = new HashMap<>();
         } else {
             pagination.setPerPage(500);
             df.setMaximumFractionDigits(2);
