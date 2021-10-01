@@ -26,7 +26,11 @@ public class DNSCommands {
             @ShellOption(help = "dns record name") String name,
             @ShellOption(help = "Target of dns record") String target,
             @ShellOption(defaultValue = "true") String proxied) {
-        return subDomainService.saveDNS(zone, type, name, target, "true".equalsIgnoreCase(proxied));
+        if(zone.equals("*")){
+            return subDomainService.saveDNS(type, name, target, "true".equalsIgnoreCase(proxied));
+        }else{
+            return subDomainService.saveDNS(zone, type, name, target, "true".equalsIgnoreCase(proxied));
+        }
     }
 
     @ShellMethod(value = "Updates all matching dns records (checks that name starts the same) under the cloudflare account")

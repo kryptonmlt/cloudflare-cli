@@ -128,6 +128,47 @@ public class SubDomainService {
         return "Zone not found";
     }
 
+    public String saveDNS(String type, String prefix, String content, boolean proxied) {
+        List<Zone> zones = cloudflareCache.getZones();
+        for (Zone zone : zones) {
+            List<DNSRecord> records = cloudflareCache.getDnsRecordsById().get(zone.getId());
+            boolean missing = true;
+            for (DNSRecord record : records) {
+                if (record.getName().startsWith(prefix)) {
+                    missing = false;
+                    break;
+                }
+            }
+            if (missing) {
+                System.out.println("Prefix: " + prefix + " is being created for: " + zone.getName());
+                new CloudflareRequest(Category.CREATE_DNS_RECORD, cloudflareAccess)
+                        .body("type", type)
+                        .body("name", prefix)
+                        .body("content", content)
+                        .body("proxied", proxied)
+                        .identifiers(zone.getId())
+                        .asObject(new CloudflareCallback<CloudflareResponse<DNSRecord>>() {
+                            @Override
+                            public void onSuccess(CloudflareResponse<DNSRecord> r) {
+                                System.out.println("success" + r.getObject());
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t, int statusCode, String statusMessage,
+                                                  Map<Integer, String> errors) {
+                                System.out.println("Error creating zone: " + errors);
+                            }
+                        }, DNSRecord.class);
+                cloudflareCache.clearCacheByZone(zone);
+                return "Update finished";
+            } else {
+                this.updateDNS(zone.getId(), type, prefix, content, proxied);
+                return "Prefix: " + prefix + " was already found for: " + zone.getName();
+            }
+        }
+        return "Zone not found";
+    }
+
     public String updateDNS(String zoneToUse, String type, String prefix, String content, boolean proxied) {
         List<Zone> zones = cloudflareCache.getZones();
         for (Zone zone : zones) {
