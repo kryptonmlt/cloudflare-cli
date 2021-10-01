@@ -160,13 +160,13 @@ public class SubDomainService {
                             }
                         }, DNSRecord.class);
                 cloudflareCache.clearCacheByZone(zone);
-                return "Update finished";
+                System.out.println("Update finished");
             } else {
                 this.updateDNS(zone.getId(), type, prefix, content, proxied);
-                return "Prefix: " + prefix + " was already found for: " + zone.getName();
+                System.out.println("Prefix: " + prefix + " was already found for: " + zone.getName());
             }
         }
-        return "Zone not found";
+        return "Finished Parsing Zones";
     }
 
     public String updateDNS(String zoneToUse, String type, String prefix, String content, boolean proxied) {

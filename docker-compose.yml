@@ -4,6 +4,7 @@ services:
   cloudflare-cli:
     image: library/openjdk:13-slim
     command: ["bash"]
+    # java -Dcloudflare.email=${EMAIL} -Dcloudflare.apikey=${KEY} -Dcloudflare.accountId=${ID} -jar /root/cloudflare-cli
     stdin_open: true
     tty: true
     volumes:
