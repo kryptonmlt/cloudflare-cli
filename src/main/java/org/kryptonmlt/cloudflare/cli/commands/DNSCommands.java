@@ -26,11 +26,14 @@ public class DNSCommands {
             @ShellOption(help = "dns record name") String name,
             @ShellOption(help = "Target of dns record") String target,
             @ShellOption(defaultValue = "true") String proxied) {
-        if(zone.equals("*")){
-            return subDomainService.saveDNS(type, name, target, "true".equalsIgnoreCase(proxied));
-        }else{
-            return subDomainService.saveDNS(zone, type, name, target, "true".equalsIgnoreCase(proxied));
-        }
+        return subDomainService.saveDNS(zone, type, name, target, "true".equalsIgnoreCase(proxied));
+    }
+
+    @ShellMethod(value = "Delete a dns record under the matching zone")
+    public String deleteDns(
+            @ShellOption(help = "DNS record will be saved under this Zone id or name (* for everything)") String zone,
+            @ShellOption(help = "dns record name") String prefix) {
+        return subDomainService.deleteRecord(zone, prefix);
     }
 
     @ShellMethod(value = "Updates all matching dns records (checks that name starts the same) under the cloudflare account")
